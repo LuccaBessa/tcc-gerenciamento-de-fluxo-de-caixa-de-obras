@@ -1,9 +1,10 @@
-import { ReactFragment, ReactNode } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { type ReactElement } from 'react'
+import { Navigate, Outlet } from 'react-router-dom'
 
-export const PrivateWrapper = () => {
-  const { user } = useAuth();
+import { useAuth } from '../../hooks/useAuth'
 
-  return user ? <Outlet /> : <Navigate to='/login' />;
-};
+export const PrivateWrapper = (): ReactElement => {
+  const { user } = useAuth()
+
+  return user != null ? <Outlet /> : <Navigate to='/login' />
+}

@@ -1,9 +1,12 @@
-import { Routes, Route } from 'react-router-dom';
-import { Home } from '../Home';
-import { Login } from '../Login';
-import { PrivateWrapper } from './PrivateWrapper.component';
+import { type ReactElement } from 'react'
+import { Route, Routes } from 'react-router-dom'
 
-export const Router = () => {
+import { Home } from '../Home'
+import { Login } from '../Login'
+
+import { PrivateWrapper } from './PrivateWrapper.component'
+
+export const Router = (): ReactElement => {
   return (
     <main>
       <Routes>
@@ -13,5 +16,5 @@ export const Router = () => {
         <Route path='/login' element={<Login />} />
       </Routes>
     </main>
-  );
-};
+  )
+}

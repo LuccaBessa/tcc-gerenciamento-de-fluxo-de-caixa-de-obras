@@ -1,3 +1,5 @@
-export const Home = () => {
-  return <div>Home</div>;
-};
+import { type ReactElement } from 'react'
+
+export const Home = (): ReactElement => {
+  return <div>Home</div>
+}
