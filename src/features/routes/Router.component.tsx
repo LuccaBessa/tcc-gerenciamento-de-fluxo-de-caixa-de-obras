@@ -1,16 +1,17 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Home } from '../Home';
 import { Login } from '../Login';
+import { PrivateWrapper } from './PrivateWrapper.component';
 
 export const Router = () => {
   return (
-    <BrowserRouter>
-      <main>
-        <Routes>
+    <main>
+      <Routes>
+        <Route element={<PrivateWrapper />}>
           <Route index element={<Home />} />
-          <Route path='login' element={<Login />} />
-        </Routes>
-      </main>
-    </BrowserRouter>
+        </Route>
+        <Route path='/login' element={<Login />} />
+      </Routes>
+    </main>
   );
 };
