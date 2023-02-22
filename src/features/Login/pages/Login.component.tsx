@@ -1,4 +1,4 @@
-import { type ReactElement } from 'react'
+import { type ReactElement, useState } from 'react'
 import {
   Button,
   Card,
@@ -9,16 +9,22 @@ import {
   FormErrorMessage,
   Image,
   Input,
-  Show
+  Show,
+  useToast
 } from '@chakra-ui/react'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
 import Logo from '../../../assets/logo.webp'
+import { auth } from '../services'
 
 import Banner from './assets/banner.webp'
 
 export const Login = (): ReactElement => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const toast = useToast()
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -28,8 +34,22 @@ export const Login = (): ReactElement => {
       email: Yup.string().email('Endereço de email inválido').required('Obrigatório'),
       password: Yup.string().required('Obrigatório')
     }),
-    onSubmit: values => {
-      alert(JSON.stringify(values, null, 2))
+    onSubmit: async values => {
+      setIsLoading(true)
+
+      try {
+        await signInWithEmailAndPassword(auth, values.email, values.password)
+      } catch (error) {
+        toast({
+          title: 'Erro ao fazer login',
+          description: 'Favor verificar suas credenciais de acesso',
+          status: 'error',
+          duration: 3000,
+          isClosable: true
+        })
+      } finally {
+        setIsLoading(false)
+      }
     }
   })
 
@@ -71,6 +91,7 @@ export const Login = (): ReactElement => {
                 <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
               </FormControl>
               <Button
+                isLoading={isLoading}
                 type='submit'
                 colorScheme='brand'
                 width='full'
