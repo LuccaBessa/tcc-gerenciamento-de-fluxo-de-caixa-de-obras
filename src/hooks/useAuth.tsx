@@ -19,6 +19,7 @@ const AuthProvider = ({ children }: any): ReactElement => {
   const setUser = (user: User | null): void => {
     handleUserState(user)
     user != null ? navigate('/') : navigate('/login')
+    user?.refreshToken != null && localStorage.setItem('refreshToken', user.refreshToken)
   }
 
   return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>

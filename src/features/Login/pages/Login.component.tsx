@@ -16,7 +16,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-import Logo from '../../../assets/logo.webp'
+import Logo from '@/assets/logo.webp'
+
 import { auth } from '../services'
 
 import Banner from './assets/banner.webp'
