@@ -26,7 +26,10 @@ const activeStyle: SystemStyleObject = {
 
 const unactiveStyle: SystemStyleObject = {
   ...defaultStyle,
-  color: 'gray.100'
+  color: 'gray.100',
+  _hover: {
+    borderBottom: '2px solid var(--chakra-colors-gray-100)'
+  }
 }
 
 export const HeaderLink = ({ name, link, active = false }: IProps): ReactElement => {

@@ -9,8 +9,10 @@ export const App = (): ReactElement => {
   const { setUser } = useAuth()
 
   useEffect(() => {
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, (user: any | null) => {
+      console.log('user', user)
       setUser(user)
+      user != null && localStorage.setItem('accessToken', user.accessToken)
     })
   }, [])
 

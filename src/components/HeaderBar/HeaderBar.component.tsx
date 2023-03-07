@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { type ReactElement, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { EditIcon, HamburgerIcon, LockIcon, SettingsIcon } from '@chakra-ui/icons'
 import {
   Avatar,
@@ -19,6 +20,7 @@ import {
   MenuItem,
   MenuList,
   Show,
+  Text,
   useDisclosure,
   useToast
 } from '@chakra-ui/react'
@@ -31,10 +33,39 @@ import { useAuth } from '../../hooks'
 
 import { HeaderLink } from './components/HeaderLink.component'
 
+const routes = [
+  {
+    name: 'Dashboard',
+    link: '/'
+  },
+  {
+    name: 'Centro de Custo',
+    link: '/centro-de-custo'
+  },
+  {
+    name: 'Fluxo de Caixa',
+    link: '/fluxo-de-caixa'
+  },
+  {
+    name: 'Clientes',
+    link: '/clientes'
+  },
+  {
+    name: 'Fornecedores',
+    link: '/fornecedores'
+  },
+  {
+    name: 'Usuários',
+    link: '/usuarios'
+  }
+]
+
 export const HeaderBar = (): ReactElement => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef(null)
 
+  const location = useLocation()
+  const navigate = useNavigate()
   const toast = useToast()
   const { user } = useAuth()
 
@@ -65,12 +96,14 @@ export const HeaderBar = (): ReactElement => {
         >
           <Image src={Logo} height='12' />
           <Flex flexGrow={1} gap={4}>
-            <HeaderLink name='Dashboard' link='/' />
-            <HeaderLink name='Centro de Custo' link='/usuarios' />
-            <HeaderLink name='Fluxo de Caixa' link='/usuarios' />
-            <HeaderLink name='Clientes' link='/usuarios' />
-            <HeaderLink name='Fornecedores' link='/usuarios' />
-            <HeaderLink name='Usuários' link='/usuarios' active />
+            {routes.map(route => (
+              <HeaderLink
+                key={route.name}
+                name={route.name}
+                link={route.link}
+                active={location.pathname === route.link}
+              />
+            ))}
           </Flex>
           <Menu>
             <MenuButton aria-label='Perfil'>
@@ -88,7 +121,13 @@ export const HeaderBar = (): ReactElement => {
         </Flex>
       </Hide>
       <Show below='md'>
-        <Flex p={4} backgroundColor='brand.main'>
+        <Flex
+          p={4}
+          backgroundColor='brand.main'
+          direction='row'
+          alignItems='center'
+          position='relative'
+        >
           <IconButton
             ref={btnRef}
             aria-label='Menu'
@@ -96,7 +135,11 @@ export const HeaderBar = (): ReactElement => {
             onClick={onOpen}
             variant='ghost'
             size='lg'
+            position='absolute'
           />
+          <Text color='white' fontWeight='bold' fontSize={18} flexGrow={1} textAlign='center'>
+            {routes.filter(route => route.link === location.pathname)[0].name}
+          </Text>
         </Flex>
         <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef}>
           <DrawerOverlay />
@@ -113,66 +156,23 @@ export const HeaderBar = (): ReactElement => {
               <Image src={Logo} height='16' />
             </DrawerHeader>
             <DrawerBody display='flex' flexDirection='column' gap={4} padding={4}>
-              <Button
-                leftIcon={<SettingsIcon />}
-                variant='ghost'
-                width='100%'
-                justifyContent='start'
-                gap={4}
-                paddingX={0}
-              >
-                Dashboard
-              </Button>
-              <Button
-                leftIcon={<SettingsIcon />}
-                variant='ghost'
-                width='100%'
-                justifyContent='start'
-                gap={4}
-                paddingX={0}
-              >
-                Centro de Custo
-              </Button>
-              <Button
-                leftIcon={<SettingsIcon />}
-                variant='ghost'
-                width='100%'
-                justifyContent='start'
-                gap={4}
-                paddingX={0}
-              >
-                Fluxo de Caixa
-              </Button>
-              <Button
-                leftIcon={<SettingsIcon />}
-                variant='ghost'
-                width='100%'
-                justifyContent='start'
-                gap={4}
-                paddingX={0}
-              >
-                Clientes
-              </Button>
-              <Button
-                leftIcon={<SettingsIcon />}
-                variant='ghost'
-                width='100%'
-                justifyContent='start'
-                gap={4}
-                paddingX={0}
-              >
-                Fornecedores
-              </Button>
-              <Button
-                leftIcon={<SettingsIcon />}
-                variant='ghost'
-                width='100%'
-                justifyContent='start'
-                gap={4}
-                paddingX={0}
-              >
-                Usuários
-              </Button>
+              {routes.map(route => (
+                <Button
+                  key={route.name}
+                  leftIcon={<SettingsIcon />}
+                  variant='ghost'
+                  width='100%'
+                  justifyContent='start'
+                  gap={4}
+                  paddingX={0}
+                  onClick={() => {
+                    navigate(route.link)
+                    onClose()
+                  }}
+                >
+                  {route.name}
+                </Button>
+              ))}
             </DrawerBody>
             <DrawerFooter>
               <Button

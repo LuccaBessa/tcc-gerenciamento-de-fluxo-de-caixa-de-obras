@@ -1,5 +1,6 @@
 import { type ReactElement } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { Box } from '@chakra-ui/react'
 
 import { Home } from '../Home'
 import { Login } from '../Login'
@@ -9,16 +10,16 @@ import { PrivateWrapper } from './PrivateWrapper.component'
 
 export const Router = (): ReactElement => {
   return (
-    <main>
+    <Box as='main'>
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route element={<PrivateWrapper />}>
           <Route index element={<Home />} />
         </Route>
-        <Route path='/usuarios' element={<PrivateWrapper />}>
-          <Route element={<Users />} />
+        <Route element={<PrivateWrapper />}>
+          <Route path='/usuarios' element={<Users />} />
         </Route>
       </Routes>
-    </main>
+    </Box>
   )
 }

@@ -8,9 +8,9 @@ const http = axios.create({
 })
 
 const requestInterceptor = (request: InternalAxiosRequestConfig): InternalAxiosRequestConfig<any> => {
-  const refreshToken = localStorage.getItem('refreshToken')
+  const accessToken = localStorage.getItem('accessToken')
 
-  if (refreshToken != null) request.headers.Authorization = `Bearer ${refreshToken}`
+  if (accessToken != null) request.headers.Authorization = `Bearer ${accessToken}`
 
   return request
 }
