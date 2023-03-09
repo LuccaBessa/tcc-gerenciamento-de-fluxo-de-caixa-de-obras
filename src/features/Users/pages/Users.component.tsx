@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable multiline-ternary */
-import { type ReactElement, useState } from 'react'
+import { type ReactElement, useState, useRef } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import {
-  Box,
   Button,
   Flex,
   Hide,
@@ -21,18 +20,24 @@ import {
   Td,
   Th,
   Thead,
-  Tr
+  Tr,
+  useDisclosure
 } from '@chakra-ui/react'
 
 import { UserCard, UserCardSkeleton } from '../components/UserCard'
 import { UserService } from '../services'
 import { type IUserPaginatedResponse } from '../services/interfaces/IUserResponse'
+import { UserForm } from '../components/UserForm.component'
 
 const pageSize = 10
 
 export const Users = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [formSize, setFormSize] = useState('lg')
   const { getAllUsers } = UserService()
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const btnRef = useRef()
 
   const getUsersPage = async ({ pageParam = 1 }): Promise<IUserPaginatedResponse> => {
     try {
@@ -55,7 +60,7 @@ export const Users = (): ReactElement => {
   const { data, isLoading } = useInfiniteQuery({
     queryKey: ['users', searchQuery],
     queryFn: getUsersPage,
-    getNextPageParam: (lastPage, pages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.nextPage <= lastPage.totalPages) {
         return lastPage.nextPage
       }
@@ -66,7 +71,7 @@ export const Users = (): ReactElement => {
   })
 
   return (
-    <Box>
+    <Stack w='100%' h='100%'>
       <Hide below='md'>
         <Flex padding={4} gap={2} justifyContent='space-between'>
           <InputGroup maxW='600px'>
@@ -82,19 +87,19 @@ export const Users = (): ReactElement => {
               <SearchIcon color='gray.400' />
             </InputRightElement>
           </InputGroup>
-          <Button rightIcon={<AddIcon />} variant='solid' colorScheme='brand'>
+          <Button
+            rightIcon={<AddIcon />}
+            variant='solid'
+            colorScheme='brand'
+            onClick={() => {
+              setFormSize('lg')
+              onOpen()
+            }}
+          >
             Criar
           </Button>
         </Flex>
-        <Box
-          sx={{
-            marginY: 4,
-            marginX: 16,
-            border: '1px solid var(--chakra-colors-gray-300)',
-            borderRadius: '4px'
-          }}
-        >
-          <TableContainer>
+          <TableContainer sx={{ height: '100%', margin: '16px !important', border: '1px solid var(--chakra-colors-gray-300)', borderRadius: '4px' }}>
             <Table variant='simple'>
               <Thead>
                 <Tr>
@@ -103,37 +108,41 @@ export const Users = (): ReactElement => {
                   <Th>Permissão</Th>
                 </Tr>
               </Thead>
-              <Tbody>
                 {isLoading ? (
-                  <Tr>
-                    <Td>
-                      <Skeleton />
-                    </Td>
-                    <Td>
-                      <Skeleton />
-                    </Td>
-                    <Td>
-                      <Skeleton />
-                    </Td>
-                  </Tr>
+                  <Tbody overflowY='hidden'>
+                  {[...Array(50)].map((i) => (
+                    <Tr key={i}>
+                      <Td>
+                        <Skeleton h='20px' />
+                      </Td>
+                      <Td>
+                        <Skeleton h='20px' />
+                      </Td>
+                      <Td>
+                        <Skeleton h='20px' />
+                      </Td>
+                    </Tr>
+                  ))}
+                  </Tbody>
                 ) : data?.pages != null ? (
-                  data?.pages
-                    .map(page => page.data)
-                    .flat(2)
-                    .map(user => (
-                      <Tr key={user.userId}>
-                        <Td>{`${user.firstName} ${user.lastName}`}</Td>
-                        <Td>{user.email}</Td>
-                        <Td>{user.permission}</Td>
-                      </Tr>
-                    ))
+                  <Tbody overflowY='auto'>
+                    {data?.pages
+                      .map(page => page.data)
+                      .flat(2)
+                      .map(user => (
+                        <Tr key={user.userId}>
+                          <Td>{`${user.firstName} ${user.lastName}`}</Td>
+                          <Td>{user.email}</Td>
+                          <Td>{user.permission}</Td>
+                        </Tr>
+                      ))
+                    }
+                  </Tbody>
                 ) : (
                   <Tr></Tr>
                 )}
-              </Tbody>
             </Table>
           </TableContainer>
-        </Box>
       </Hide>
       <Show below='md'>
         <Flex padding={2} gap={2} justifyContent='space-between'>
@@ -155,6 +164,10 @@ export const Users = (): ReactElement => {
             icon={<AddIcon />}
             variant='solid'
             colorScheme='brand'
+            onClick={() => {
+              setFormSize('full')
+              onOpen()
+            }}
           />
         </Flex>
         {isLoading ? (
@@ -164,7 +177,7 @@ export const Users = (): ReactElement => {
             ))}
           </Flex>
         ) : (
-          <Stack>
+          <Stack overflowY='auto' p={2}>
             {data?.pages != null
               ? data?.pages
                   .map(page => page.data)
@@ -182,6 +195,7 @@ export const Users = (): ReactElement => {
           </Stack>
         )}
       </Show>
-    </Box>
+      <UserForm isOpen={isOpen} onClose={onClose} btnRef={btnRef} size={formSize} />
+    </Stack>
   )
 }
