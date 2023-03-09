@@ -11,7 +11,7 @@ interface IProps {
 export const UserCard = ({ firstName, lastName, email, permission }: IProps): ReactElement => {
   return (
     <Card>
-      <CardBody>
+      <CardBody sx={{ padding: 3 }}>
         <Stack direction='row' alignItems='center'>
         <Stack flexGrow={1}>
           <Text>{`${firstName} ${lastName}`}</Text>

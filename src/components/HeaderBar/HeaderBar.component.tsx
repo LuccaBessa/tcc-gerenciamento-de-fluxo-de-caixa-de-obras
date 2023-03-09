@@ -85,128 +85,134 @@ export const HeaderBar = (): ReactElement => {
 
   return (
     <>
-      <Hide below='md'>
-        <Flex
-          backgroundColor='brand.main'
-          direction='row'
-          justifyContent='start'
-          alignItems='center'
-          p={4}
-          gap={8}
-        >
-          <Image src={Logo} height='12' />
-          <Flex flexGrow={1} gap={4}>
-            {routes.map(route => (
-              <HeaderLink
-                key={route.name}
-                name={route.name}
-                link={route.link}
-                active={location.pathname === route.link}
-              />
-            ))}
-          </Flex>
-          <Menu>
-            <MenuButton aria-label='Perfil'>
-              <Avatar
-                size='md'
-                name={
-                  profile?.firstName != null && profile.lastName != null
-                    ? `${profile.firstName} ${profile.lastName}`
-                    : ''
-                }
-              />
-            </MenuButton>
-            <MenuList>
-              <MenuItem icon={<EditIcon />} onClick={onClickSignOut}>
-                Perfil
-              </MenuItem>
-              <MenuItem icon={<LockIcon />} onClick={onClickSignOut}>
-                Sair
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex>
-      </Hide>
-      <Show below='md'>
-        <Flex
-          p={4}
-          backgroundColor='brand.main'
-          direction='row'
-          alignItems='center'
-          position='relative'
-        >
-          <IconButton
-            ref={btnRef}
-            aria-label='Menu'
-            icon={<HamburgerIcon color='white' />}
-            onClick={onOpen}
-            variant='ghost'
-            size='lg'
-            position='absolute'
-          />
-          <Text color='white' fontWeight='bold' fontSize={18} flexGrow={1} textAlign='center'>
-            {routes.filter(route => route.link === location.pathname)[0].name}
-          </Text>
-        </Flex>
-        <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef}>
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerHeader
-              sx={{
-                backgroundColor: 'brand.main',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: 8
-              }}
+      {location.pathname !== '/login' && (
+        <>
+          <Hide below='md'>
+            <Flex
+              backgroundColor='brand.main'
+              direction='row'
+              justifyContent='start'
+              alignItems='center'
+              p={2}
+              gap={8}
+              height='60px'
             >
-              <Image src={Logo} height='16' />
-            </DrawerHeader>
-            <DrawerBody display='flex' flexDirection='column' gap={4} padding={4}>
-              {routes.map(route => (
-                <Button
-                  key={route.name}
-                  leftIcon={<SettingsIcon />}
-                  variant='ghost'
-                  width='100%'
-                  justifyContent='start'
-                  gap={4}
-                  paddingX={0}
-                  onClick={() => {
-                    navigate(route.link)
-                    onClose()
-                  }}
-                >
-                  {route.name}
-                </Button>
-              ))}
-            </DrawerBody>
-            <DrawerFooter>
-              <Button
-                leftIcon={
+              <Image src={Logo} height='12' />
+              <Flex flexGrow={1} gap={4}>
+                {routes.map(route => (
+                  <HeaderLink
+                    key={route.name}
+                    name={route.name}
+                    link={route.link}
+                    active={location.pathname === route.link}
+                  />
+                ))}
+              </Flex>
+              <Menu>
+                <MenuButton aria-label='Perfil'>
                   <Avatar
-                    size='sm'
+                    size='md'
                     name={
                       profile?.firstName != null && profile.lastName != null
                         ? `${profile.firstName} ${profile.lastName}`
                         : ''
                     }
                   />
-                }
+                </MenuButton>
+                <MenuList>
+                  <MenuItem icon={<EditIcon />} onClick={onClickSignOut}>
+                    Perfil
+                  </MenuItem>
+                  <MenuItem icon={<LockIcon />} onClick={onClickSignOut}>
+                    Sair
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
+          </Hide>
+          <Show below='md'>
+            <Flex
+              p={4}
+              backgroundColor='brand.main'
+              direction='row'
+              alignItems='center'
+              position='relative'
+              height='60px'
+            >
+              <IconButton
+                ref={btnRef}
+                aria-label='Menu'
+                icon={<HamburgerIcon color='white' />}
+                onClick={onOpen}
                 variant='ghost'
-                width='100%'
-                justifyContent='start'
-                gap={4}
-                paddingX={0}
-              >
-                {profile?.firstName != null && profile.lastName != null
-                  ? `${profile.firstName} ${profile.lastName}`
-                  : ''}
-              </Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      </Show>
+                size='lg'
+                position='absolute'
+              />
+              <Text color='white' fontWeight='bold' fontSize={18} flexGrow={1} textAlign='center'>
+                {routes.filter(route => route.link === location.pathname)[0].name}
+              </Text>
+            </Flex>
+            <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef}>
+              <DrawerOverlay />
+              <DrawerContent>
+                <DrawerHeader
+                  sx={{
+                    backgroundColor: 'brand.main',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 8
+                  }}
+                >
+                  <Image src={Logo} height='16' />
+                </DrawerHeader>
+                <DrawerBody display='flex' flexDirection='column' gap={4} padding={4}>
+                  {routes.map(route => (
+                    <Button
+                      key={route.name}
+                      leftIcon={<SettingsIcon />}
+                      variant='ghost'
+                      width='100%'
+                      justifyContent='start'
+                      gap={4}
+                      paddingX={0}
+                      onClick={() => {
+                        navigate(route.link)
+                        onClose()
+                      }}
+                    >
+                      {route.name}
+                    </Button>
+                  ))}
+                </DrawerBody>
+                <DrawerFooter>
+                  <Button
+                    leftIcon={
+                      <Avatar
+                        size='sm'
+                        name={
+                          profile?.firstName != null && profile.lastName != null
+                            ? `${profile.firstName} ${profile.lastName}`
+                            : ''
+                        }
+                      />
+                    }
+                    variant='ghost'
+                    width='100%'
+                    justifyContent='start'
+                    gap={4}
+                    paddingX={0}
+                  >
+                    {profile?.firstName != null && profile.lastName != null
+                      ? `${profile.firstName} ${profile.lastName}`
+                      : ''}
+                  </Button>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
+          </Show>
+        </>
+      )}
     </>
   )
 }
