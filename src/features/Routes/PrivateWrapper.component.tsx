@@ -1,10 +1,10 @@
 import { type ReactElement } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
-import { useAuth } from '../../hooks/useAuth'
+import { useProfile } from '../../hooks/useProfile'
 
 export const PrivateWrapper = (): ReactElement => {
-  const { user } = useAuth()
+  const { profile } = useProfile()
 
-  return user != null ? <Outlet /> : <Navigate to='/login' />
+  return profile != null ? <Outlet /> : <Navigate to='/login' />
 }

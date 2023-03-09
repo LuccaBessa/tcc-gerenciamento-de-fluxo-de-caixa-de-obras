@@ -29,7 +29,7 @@ import { signOut } from 'firebase/auth'
 import Logo from '@/assets/logo.webp'
 
 import { auth } from '../../features/Login'
-import { useAuth } from '../../hooks'
+import { useProfile } from '../../hooks'
 
 import { HeaderLink } from './components/HeaderLink.component'
 
@@ -67,7 +67,7 @@ export const HeaderBar = (): ReactElement => {
   const location = useLocation()
   const navigate = useNavigate()
   const toast = useToast()
-  const { user } = useAuth()
+  const { profile } = useProfile()
 
   const onClickSignOut = async (): Promise<void> => {
     try {
@@ -107,7 +107,14 @@ export const HeaderBar = (): ReactElement => {
           </Flex>
           <Menu>
             <MenuButton aria-label='Perfil'>
-              <Avatar size='sm' name={user?.displayName != null ? user?.displayName : ''} />
+              <Avatar
+                size='md'
+                name={
+                  profile?.firstName != null && profile.lastName != null
+                    ? `${profile.firstName} ${profile.lastName}`
+                    : ''
+                }
+              />
             </MenuButton>
             <MenuList>
               <MenuItem icon={<EditIcon />} onClick={onClickSignOut}>
@@ -177,7 +184,14 @@ export const HeaderBar = (): ReactElement => {
             <DrawerFooter>
               <Button
                 leftIcon={
-                  <Avatar size='sm' name={user?.displayName != null ? user?.displayName : ''} />
+                  <Avatar
+                    size='sm'
+                    name={
+                      profile?.firstName != null && profile.lastName != null
+                        ? `${profile.firstName} ${profile.lastName}`
+                        : ''
+                    }
+                  />
                 }
                 variant='ghost'
                 width='100%'
@@ -185,7 +199,9 @@ export const HeaderBar = (): ReactElement => {
                 gap={4}
                 paddingX={0}
               >
-                {user?.displayName != null ? user?.displayName : ''}
+                {profile?.firstName != null && profile.lastName != null
+                  ? `${profile.firstName} ${profile.lastName}`
+                  : ''}
               </Button>
             </DrawerFooter>
           </DrawerContent>

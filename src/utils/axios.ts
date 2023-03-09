@@ -1,8 +1,9 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
 
 const http = axios.create({
-  baseURL: '/',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
+    Accept: '*/*',
     'Content-Type': 'application/json'
   }
 })
