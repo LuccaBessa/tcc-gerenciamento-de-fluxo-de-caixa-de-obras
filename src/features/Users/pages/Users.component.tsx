@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable multiline-ternary */
-import { type ReactElement, useState, useRef } from 'react'
+import { type ReactElement, useRef, useState } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import { AddIcon, SearchIcon } from '@chakra-ui/icons'
 import {
@@ -25,9 +25,9 @@ import {
 } from '@chakra-ui/react'
 
 import { UserCard, UserCardSkeleton } from '../components/UserCard'
+import { UserForm } from '../components/UserForm.component'
 import { UserService } from '../services'
 import { type IUserPaginatedResponse } from '../services/interfaces/IUserResponse'
-import { UserForm } from '../components/UserForm.component'
 
 const pageSize = 10
 
@@ -60,7 +60,7 @@ export const Users = (): ReactElement => {
   const { data, isLoading } = useInfiniteQuery({
     queryKey: ['users', searchQuery],
     queryFn: getUsersPage,
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: lastPage => {
       if (lastPage.nextPage <= lastPage.totalPages) {
         return lastPage.nextPage
       }
@@ -99,50 +99,69 @@ export const Users = (): ReactElement => {
             Criar
           </Button>
         </Flex>
-          <TableContainer sx={{ height: '100%', margin: '16px !important', border: '1px solid var(--chakra-colors-gray-300)', borderRadius: '4px' }}>
-            <Table variant='simple'>
-              <Thead>
-                <Tr>
-                  <Th>Nome</Th>
-                  <Th>Email</Th>
-                  <Th>Permissão</Th>
-                </Tr>
-              </Thead>
-                {isLoading ? (
-                  <Tbody overflowY='hidden'>
-                  {[...Array(50)].map((i) => (
-                    <Tr key={i}>
-                      <Td>
-                        <Skeleton h='20px' />
-                      </Td>
-                      <Td>
-                        <Skeleton h='20px' />
-                      </Td>
-                      <Td>
-                        <Skeleton h='20px' />
-                      </Td>
+        <TableContainer
+          sx={{
+            height: '100%',
+            margin: '16px !important',
+            border: '1px solid var(--chakra-colors-gray-300)',
+            borderRadius: '4px'
+          }}
+        >
+          <Table variant='simple'>
+            <Thead>
+              <Tr>
+                <Th>Nome</Th>
+                <Th>Email</Th>
+                <Th>Permissão</Th>
+              </Tr>
+            </Thead>
+            {isLoading ? (
+              <Tbody overflowY='hidden'>
+                {[...Array(50)].map((_, i) => (
+                  <Tr key={`rowskeletion ${i}`}>
+                    <Td>
+                      <Skeleton h='20px' />
+                    </Td>
+                    <Td>
+                      <Skeleton h='20px' />
+                    </Td>
+                    <Td>
+                      <Skeleton h='20px' />
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            ) : data?.pages != null ? (
+              <Tbody overflowY='auto'>
+                {data?.pages
+                  .map(page => page.data)
+                  .flat(2)
+                  .map(user => (
+                    <Tr
+                      key={user.userId}
+                      sx={{
+                        _hover: {
+                          backgroundColor: 'gray.200',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease-in-out'
+                        },
+                        _active: {
+                          backgroundColor: 'gray.300',
+                          transition: 'background-color 0.3s ease'
+                        }
+                      }}
+                    >
+                      <Td>{`${user.firstName} ${user.lastName}`}</Td>
+                      <Td>{user.email}</Td>
+                      <Td>{user.permission}</Td>
                     </Tr>
                   ))}
-                  </Tbody>
-                ) : data?.pages != null ? (
-                  <Tbody overflowY='auto'>
-                    {data?.pages
-                      .map(page => page.data)
-                      .flat(2)
-                      .map(user => (
-                        <Tr key={user.userId}>
-                          <Td>{`${user.firstName} ${user.lastName}`}</Td>
-                          <Td>{user.email}</Td>
-                          <Td>{user.permission}</Td>
-                        </Tr>
-                      ))
-                    }
-                  </Tbody>
-                ) : (
-                  <Tr></Tr>
-                )}
-            </Table>
-          </TableContainer>
+              </Tbody>
+            ) : (
+              <Tr></Tr>
+            )}
+          </Table>
+        </TableContainer>
       </Hide>
       <Show below='md'>
         <Flex padding={2} gap={2} justifyContent='space-between'>
@@ -173,7 +192,7 @@ export const Users = (): ReactElement => {
         {isLoading ? (
           <Flex sx={{ padding: 2, gap: 2, flexDirection: 'column', overflowY: 'hidden' }}>
             {[...Array(15)].map((_, i) => (
-              <UserCardSkeleton key={i} />
+              <UserCardSkeleton key={`cardskeletion ${i}`} />
             ))}
           </Flex>
         ) : (
