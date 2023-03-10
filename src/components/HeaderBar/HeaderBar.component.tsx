@@ -113,10 +113,11 @@ export const HeaderBar = (): ReactElement => {
                   <Avatar
                     size='md'
                     name={
-                      profile?.firstName != null && profile.lastName != null
-                        ? `${profile.firstName} ${profile.lastName}`
-                        : ''
+                      profile?.displayName != null
+                        ? profile.displayName.split(' - ')[0]
+                        : profile?.email ?? 'Usuário'
                     }
+                    border='2px solid white'
                   />
                 </MenuButton>
                 <MenuList>
@@ -191,9 +192,9 @@ export const HeaderBar = (): ReactElement => {
                       <Avatar
                         size='sm'
                         name={
-                          profile?.firstName != null && profile.lastName != null
-                            ? `${profile.firstName} ${profile.lastName}`
-                            : ''
+                          profile?.displayName != null
+                            ? profile.displayName.split(' - ')[0]
+                            : profile?.email ?? 'Usuário'
                         }
                       />
                     }
@@ -203,9 +204,9 @@ export const HeaderBar = (): ReactElement => {
                     gap={4}
                     paddingX={0}
                   >
-                    {profile?.firstName != null && profile.lastName != null
-                      ? `${profile.firstName} ${profile.lastName}`
-                      : ''}
+                    {profile?.displayName != null
+                      ? profile.displayName.split(' - ')[0]
+                      : profile?.email ?? 'Usuário'}
                   </Button>
                 </DrawerFooter>
               </DrawerContent>

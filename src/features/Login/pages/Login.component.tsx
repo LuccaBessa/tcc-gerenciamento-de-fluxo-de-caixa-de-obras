@@ -55,11 +55,11 @@ export const Login = (): ReactElement => {
   })
 
   return (
-    <Flex sx={{ height: '100%', backgroundColor: 'gray.100' }}>
+    <Flex sx={{ height: '100%', width: '100%', backgroundColor: 'gray.100' }}>
       <Show above='lg'>
         <Image src={Banner} sx={{ width: '70%', objectFit: 'cover' }} />
       </Show>
-      <Flex sx={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Flex sx={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
         <Card sx={{ width: '320px' }}>
           <CardHeader sx={{ display: 'flex', justifyContent: 'center' }}>
             <Image src={Logo} sx={{ width: '80%' }} />

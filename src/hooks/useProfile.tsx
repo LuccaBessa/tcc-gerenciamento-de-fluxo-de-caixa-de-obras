@@ -2,11 +2,8 @@ import { createContext, type ReactElement, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { type User } from 'firebase/auth'
 
-import { type IUser } from '../features/Users/services/interfaces'
-import { getResponse, http } from '../utils'
-
 interface ProfileContextType {
-  profile: IUser | null
+  profile: User | null
   setProfile: (user: User | null) => void
 }
 
@@ -16,25 +13,13 @@ const ProfileContext: React.Context<ProfileContextType> = createContext<ProfileC
 })
 
 const ProfileProvider = ({ children }: any): ReactElement => {
-  const [profile, handleProfileState] = useState<IUser | null>(null)
+  const [profile, handleProfileState] = useState<User | null>(null)
   const navigate = useNavigate()
 
   const setProfile = (user: User | null): void => {
-    if (user != null) {
-      http
-        .get('/user/profile')
-        .then(response => {
-          handleProfileState(getResponse(response))
-          navigate('/')
-        })
-        .catch(error => {
-          console.error(error)
-          navigate('/login')
-        })
-    } else {
-      handleProfileState(null)
-      navigate('/login')
-    }
+    console.log(user)
+    handleProfileState(user)
+    user != null ? navigate('/') : navigate('/login')
   }
 
   return (
